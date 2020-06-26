@@ -7,6 +7,7 @@ import com.rbkmoney.shumaich.kafka.serde.OperationLogDeserializer;
 import com.rbkmoney.shumaich.kafka.serde.OperationLogSerializer;
 import com.rbkmoney.shumaich.service.KafkaOffsetService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class KafkaConfiguration {
@@ -102,6 +104,11 @@ public class KafkaConfiguration {
     public TopicConsumptionManager<String, OperationLog> operationLogTopicConsumptionManager(AdminClient kafkaAdminClient,
                                                                                              KafkaOffsetService kafkaOffsetService,
                                                                                              Handler<String, OperationLog> handler) throws ExecutionException, InterruptedException {
+
+        log.info("all topics: {}", kafkaAdminClient.listTopics().names().get());
+        log.info("describe cluster: {}", kafkaAdminClient.describeCluster().nodes().get());
+        log.info("topic name: {}", operationLogTopicName);
+
         Map<String, Object> consumerProps = consumerConfig();
         consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, OperationLogDeserializer.class);
