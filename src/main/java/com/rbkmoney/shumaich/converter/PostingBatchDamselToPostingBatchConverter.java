@@ -15,7 +15,10 @@ public class PostingBatchDamselToPostingBatchConverter {
     public PostingBatch convert(com.rbkmoney.damsel.shumaich.PostingBatch postingBatchDamsel) {
         return PostingBatch.builder()
                 .id(postingBatchDamsel.getId())
-                .postings(postingBatchDamsel.getPostings().stream().map(converter::convert).collect(Collectors.toList()))
+                .postings(postingBatchDamsel.getPostings()
+                        .stream()
+                        .map(converter::convert)
+                        .collect(Collectors.toList()))
                 .build();
     }
 

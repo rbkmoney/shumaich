@@ -31,11 +31,13 @@ public class PostingPlanOperationToOperationLogListConverter {
                 long batchHash = HashUtils.computeHash(postingBatch.getPostings());
                 operationLogs.add(
                         createOperationLog(source, planOperationsCount, sequenceId.next(),
-                                postingBatch, posting, batchHash, true)
+                                postingBatch, posting, batchHash, true
+                        )
                 );
                 operationLogs.add(
                         createOperationLog(source, planOperationsCount, sequenceId.next(),
-                                postingBatch, posting, batchHash, false)
+                                postingBatch, posting, batchHash, false
+                        )
                 );
             }
         }

@@ -278,8 +278,10 @@ public class ShumaichServiceHandlerIntegrationTest extends IntegrationTestBase {
                 .until(() -> handler.rollbackPlan(postingPlan, fakeClock), notNullValue());
 
         //second commit shouldn't be proceeded
-        verify(balanceService, times(6)).proceedHold(argThat(operationLog -> operationLog.getPlanId().contains("notKekPlan")));
-        verify(balanceService, times(0)).proceedFinalOp(argThat(operationLog -> operationLog.getPlanId().contains("kekPlan")));
+        verify(balanceService, times(6)).proceedHold(argThat(operationLog -> operationLog.getPlanId()
+                .contains("notKekPlan")));
+        verify(balanceService, times(0)).proceedFinalOp(argThat(operationLog -> operationLog.getPlanId()
+                .contains("kekPlan")));
     }
 
     @Test

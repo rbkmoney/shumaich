@@ -21,6 +21,9 @@ public class Clock {
     @AllArgsConstructor
     public static class PartitionOffsetPair {
 
+        private Integer partition;
+        private Long offset;
+
         public PartitionOffsetPair(RecordMetadata recordMetadata) {
             this.partition = recordMetadata.partition();
             this.offset = recordMetadata.offset();
@@ -30,9 +33,6 @@ public class Clock {
             this.partition = kafkaOffset.getTopicPartition().partition();
             this.offset = kafkaOffset.getOffset();
         }
-
-        private Integer partition;
-        private Long offset;
     }
 }
 

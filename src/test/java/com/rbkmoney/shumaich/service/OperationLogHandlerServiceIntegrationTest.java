@@ -34,12 +34,10 @@ public class OperationLogHandlerServiceIntegrationTest extends IntegrationTestBa
 
     @Autowired
     IdempotentTestHandler handler;
-
-    @Autowired
-    private PostingPlanOperationToOperationLogListConverter converter;
-
     @Autowired
     TopicConsumptionManager<Long, OperationLog> operationLogTopicConsumptionManager;
+    @Autowired
+    private PostingPlanOperationToOperationLogListConverter converter;
 
     @Test
     public void successEventPropagation() {

@@ -31,6 +31,6 @@ public class KafkaOffsetDao extends RocksDbDao {
     }
 
     public void putBatch(WriteOptions writeOptions, WriteBatch writeBatch) throws RocksDBException {
-            rocksDB.write(writeOptions, writeBatch);
+        rocksDB.write(writeOptions, writeBatch);
     }
 }

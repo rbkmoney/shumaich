@@ -39,7 +39,9 @@ public class ValidationService {
             if (posting.getFromAccount().getId() == (posting.getToAccount().getId())) {
                 throw new AccountsInPostingsAreEqualException();
             }
-            if (!posting.getFromAccount().getCurrencySymbolicCode().equals(posting.getToAccount().getCurrencySymbolicCode())) {
+            if (!posting.getFromAccount()
+                    .getCurrencySymbolicCode()
+                    .equals(posting.getToAccount().getCurrencySymbolicCode())) {
                 throw new AccountsHaveDifferentCurrenciesException();
             }
         }

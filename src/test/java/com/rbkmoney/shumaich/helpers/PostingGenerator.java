@@ -40,7 +40,11 @@ public class PostingGenerator {
         return createBatch(providerAcc, systemAcc, merchantAcc, BATCH_ID);
     }
 
-    public static PostingBatch createBatchWithFixedAmount(Long providerAcc, Long systemAcc, Long merchantAcc, Long amount) {
+    public static PostingBatch createBatchWithFixedAmount(
+            Long providerAcc,
+            Long systemAcc,
+            Long merchantAcc,
+            Long amount) {
         PostingBatch batch = new PostingBatch();
         batch.setId(BATCH_ID);
         ArrayList<Posting> postings = new ArrayList<>();
@@ -66,7 +70,11 @@ public class PostingGenerator {
         return batch;
     }
 
-    public static PostingPlanChange createPostingPlanChange(String planId, Long providerAcc, Long systemAcc, Long merchantAcc) {
+    public static PostingPlanChange createPostingPlanChange(
+            String planId,
+            Long providerAcc,
+            Long systemAcc,
+            Long merchantAcc) {
         PostingBatch batch = PostingGenerator.createBatch(providerAcc, systemAcc, merchantAcc);
 
         return new PostingPlanChange()
@@ -75,7 +83,12 @@ public class PostingGenerator {
                 .setCreationTime("2016-03-22T06:12:27Z");
     }
 
-    public static PostingPlanChange createPostingPlanChange(String planId, Long providerAcc, Long systemAcc, Long merchantAcc, Long amount) {
+    public static PostingPlanChange createPostingPlanChange(
+            String planId,
+            Long providerAcc,
+            Long systemAcc,
+            Long merchantAcc,
+            Long amount) {
         PostingBatch batch = PostingGenerator.createBatchWithFixedAmount(providerAcc, systemAcc, merchantAcc, amount);
 
         return new PostingPlanChange()
@@ -101,7 +114,11 @@ public class PostingGenerator {
                 .setDescription("test");
     }
 
-    public static PostingPlanChange createPostingPlanChangeTwoAccs(String planId, Long firstAcc, Long secondAcc, long amount) {
+    public static PostingPlanChange createPostingPlanChangeTwoAccs(
+            String planId,
+            Long firstAcc,
+            Long secondAcc,
+            long amount) {
         return new PostingPlanChange()
                 .setId(planId)
                 .setBatch(new PostingBatch()

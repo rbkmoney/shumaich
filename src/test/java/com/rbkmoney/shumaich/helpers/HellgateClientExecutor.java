@@ -31,7 +31,8 @@ public class HellgateClientExecutor implements Callable<Map.Entry<String, Balanc
             clockAfterFinalOperation = retryTemplate.execute(context -> serviceHandler.rollbackPlan(
                     TestUtils.postingPlanFromPostingPlanChange(postingPlanChange), holdClock));
         }
-        Balance finalOpBalance = retryTemplate.execute(context -> serviceHandler.getBalanceByID(account, clockAfterFinalOperation));
+        Balance finalOpBalance =
+                retryTemplate.execute(context -> serviceHandler.getBalanceByID(account, clockAfterFinalOperation));
         return Map.entry(VectorClockSerde.deserialize(finalOpBalance.getClock().getVector()), finalOpBalance);
     }
 }

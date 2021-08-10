@@ -20,26 +20,32 @@ public class TestUtils {
         List<KafkaOffset> kafkaOffsets = CLOCK_SERVICE.parseClock(VectorClockSerde.deserialize(clock.getVector()));
         kafkaOffsets.forEach(kafkaOffset -> {
             int partition = kafkaOffset.getTopicPartition().partition();
-            if (partitionsAndIncrement.containsKey((long) partition))
+            if (partitionsAndIncrement.containsKey((long) partition)) {
                 kafkaOffset.setOffset(kafkaOffset.getOffset() + partitionsAndIncrement.get((long) partition));
+            }
         });
         return Clock.vector(
                 VectorClockSerde.serialize(
                         CommonConverter.serialize(
-                                new com.rbkmoney.shumaich.domain.Clock(kafkaOffsets.get(0).getTopicPartition().topic(),
-                                kafkaOffsets
-                                        .stream()
-                                        .map(com.rbkmoney.shumaich.domain.Clock.PartitionOffsetPair::new)
-                                        .collect(Collectors.toList())))
+                                new com.rbkmoney.shumaich.domain.Clock(
+                                        kafkaOffsets.get(0).getTopicPartition().topic(),
+                                        kafkaOffsets
+                                                .stream()
+                                                .map(com.rbkmoney.shumaich.domain.Clock.PartitionOffsetPair::new)
+                                                .collect(Collectors.toList())
+                                ))
                 )
         );
     }
 
     public static String createSerializedClock() {
         return CommonConverter.serialize(
-                new com.rbkmoney.shumaich.domain.Clock("test",
-                        List.of(new com.rbkmoney.shumaich.domain.Clock.PartitionOffsetPair(1, 1L),
-                                new com.rbkmoney.shumaich.domain.Clock.PartitionOffsetPair(2, 2L))
+                new com.rbkmoney.shumaich.domain.Clock(
+                        "test",
+                        List.of(
+                                new com.rbkmoney.shumaich.domain.Clock.PartitionOffsetPair(1, 1L),
+                                new com.rbkmoney.shumaich.domain.Clock.PartitionOffsetPair(2, 2L)
+                        )
                 )
         );
     }

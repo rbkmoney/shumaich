@@ -35,21 +35,15 @@ import java.util.concurrent.ExecutionException;
 public class KafkaConfiguration {
 
     private static final String EARLIEST = "earliest";
-
+    private final KafkaSslProperties kafkaSslProperties;
     @Value("${kafka.bootstrap-servers}")
     private String bootstrapServers;
-
     @Value("${kafka.topics.partitions-per-thread}")
     private Integer partitionsPerThread;
-
     @Value("${kafka.topics.polling-timeout}")
     private Long pollingTimeout;
-
     @Value("${kafka.topics.operation-log-name}")
     private String operationLogTopicName;
-
-    private final KafkaSslProperties kafkaSslProperties;
-
 
     private Map<String, Object> consumerConfig() {
         final Map<String, Object> props = new HashMap<>();
@@ -113,7 +107,8 @@ public class KafkaConfiguration {
                 .get(operationLogTopicName)
                 .get();
 
-        return new TopicConsumptionManager<>(topicDescription,
+        return new TopicConsumptionManager<>(
+                topicDescription,
                 partitionsPerThread,
                 consumerProps,
                 kafkaOffsetService,
@@ -125,11 +120,17 @@ public class KafkaConfiguration {
     private void configureSsl(Map<String, Object> props, KafkaSslProperties kafkaSslProperties) {
         if (kafkaSslProperties.isEnabled()) {
             props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SSL.name());
-            props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, new File(kafkaSslProperties.getTrustStoreLocation()).getAbsolutePath());
+            props.put(
+                    SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG,
+                    new File(kafkaSslProperties.getTrustStoreLocation()).getAbsolutePath()
+            );
             props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, kafkaSslProperties.getTrustStorePassword());
             props.put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, kafkaSslProperties.getKeyStoreType());
             props.put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, kafkaSslProperties.getTrustStoreType());
-            props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, new File(kafkaSslProperties.getKeyStoreLocation()).getAbsolutePath());
+            props.put(
+                    SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG,
+                    new File(kafkaSslProperties.getKeyStoreLocation()).getAbsolutePath()
+            );
             props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, kafkaSslProperties.getKeyStorePassword());
             props.put(SslConfigs.SSL_KEY_PASSWORD_CONFIG, kafkaSslProperties.getKeyPassword());
         }

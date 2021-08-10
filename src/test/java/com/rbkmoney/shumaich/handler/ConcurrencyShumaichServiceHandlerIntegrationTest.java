@@ -45,14 +45,12 @@ import static org.junit.Assert.assertEquals;
 @Ignore
 public class ConcurrencyShumaichServiceHandlerIntegrationTest extends IntegrationTestBase {
 
+    public static final Long TEST_CASE_FIRST = 10000000000L;
+    public static final Long TEST_CASE_SECOND = 20000000000L;
     private static final int ITERATIONS = 10;
     private static final int OPERATIONS = 15000;
     private static final int THREAD_NUM = 16;
     private static final long HOLD_AMOUNT = 100;
-
-    public static final Long TEST_CASE_FIRST = 10000000000L;
-    public static final Long TEST_CASE_SECOND = 20000000000L;
-
     @Autowired
     ShumaichServiceHandler serviceHandler;
 
@@ -78,6 +76,7 @@ public class ConcurrencyShumaichServiceHandlerIntegrationTest extends Integratio
     TransactionDB rocksDB;
 
     RetryTemplate retryTemplate = getRetryTemplate();
+    private ExecutorService executorService;
 
     @NotNull
     private RetryTemplate getRetryTemplate() {
@@ -89,8 +88,6 @@ public class ConcurrencyShumaichServiceHandlerIntegrationTest extends Integratio
         return retryTemplate;
     }
 
-    private ExecutorService executorService;
-
     @Test
     public void concurrentHoldsConsistencyTest() throws InterruptedException {
         for (int iteration = 0; iteration < ITERATIONS; iteration++) {
@@ -101,16 +98,18 @@ public class ConcurrencyShumaichServiceHandlerIntegrationTest extends Integratio
             for (int operation = 0; operation < OPERATIONS; operation++) {
                 PostingPlanChange postingPlanChange = PostingGenerator.createPostingPlanChange(
                         TEST_CASE_FIRST + "_iteration" + iteration + "_operation" + operation,
-                         TEST_CASE_FIRST  + iteration + PROVIDER_ACC,
-                         TEST_CASE_FIRST + iteration + SYSTEM_ACC,
-                         TEST_CASE_FIRST + iteration + MERCHANT_ACC,
-                        HOLD_AMOUNT);
+                        TEST_CASE_FIRST + iteration + PROVIDER_ACC,
+                        TEST_CASE_FIRST + iteration + SYSTEM_ACC,
+                        TEST_CASE_FIRST + iteration + MERCHANT_ACC,
+                        HOLD_AMOUNT
+                );
 
                 futureList.add(executorService.submit(new HoldPlansExecutor(
-                        serviceHandler,
-                        postingPlanChange,
-                        retryTemplate,
-                        TEST_CASE_FIRST + iteration + MERCHANT_ACC)
+                                serviceHandler,
+                                postingPlanChange,
+                                retryTemplate,
+                                TEST_CASE_FIRST + iteration + MERCHANT_ACC
+                        )
                 ));
             }
 
@@ -139,24 +138,28 @@ public class ConcurrencyShumaichServiceHandlerIntegrationTest extends Integratio
 
             for (int operation = 0; operation < OPERATIONS; operation += 2) {
                 futureList.add(executorService.submit(new HellgateClientExecutor(
-                        serviceHandler,
-                        PostingGenerator.createPostingPlanChangeTwoAccs(
-                                TEST_CASE_SECOND + iteration + "_operation" + operation,
-                                TEST_CASE_SECOND + iteration + SYSTEM_ACC,
-                                TEST_CASE_SECOND + iteration + MERCHANT_ACC,
-                                HOLD_AMOUNT),
-                        retryTemplate,
-                        TEST_CASE_SECOND + iteration + SYSTEM_ACC)
+                                serviceHandler,
+                                PostingGenerator.createPostingPlanChangeTwoAccs(
+                                        TEST_CASE_SECOND + iteration + "_operation" + operation,
+                                        TEST_CASE_SECOND + iteration + SYSTEM_ACC,
+                                        TEST_CASE_SECOND + iteration + MERCHANT_ACC,
+                                        HOLD_AMOUNT
+                                ),
+                                retryTemplate,
+                                TEST_CASE_SECOND + iteration + SYSTEM_ACC
+                        )
                 ));
                 futureList.add(executorService.submit(new HellgateClientExecutor(
-                        serviceHandler,
-                        PostingGenerator.createPostingPlanChangeTwoAccs(
-                                TEST_CASE_SECOND + iteration + "_operation" + (operation + 1),
-                                TEST_CASE_SECOND + iteration + MERCHANT_ACC,
-                                TEST_CASE_SECOND + iteration + SYSTEM_ACC,
-                                HOLD_AMOUNT),
-                        retryTemplate,
-                        TEST_CASE_SECOND + iteration + MERCHANT_ACC)
+                                serviceHandler,
+                                PostingGenerator.createPostingPlanChangeTwoAccs(
+                                        TEST_CASE_SECOND + iteration + "_operation" + (operation + 1),
+                                        TEST_CASE_SECOND + iteration + MERCHANT_ACC,
+                                        TEST_CASE_SECOND + iteration + SYSTEM_ACC,
+                                        HOLD_AMOUNT
+                                ),
+                                retryTemplate,
+                                TEST_CASE_SECOND + iteration + MERCHANT_ACC
+                        )
                 ));
             }
 

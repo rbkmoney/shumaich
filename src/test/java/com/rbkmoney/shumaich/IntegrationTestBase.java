@@ -44,35 +44,23 @@ import static org.mockito.ArgumentMatchers.any;
 @ContextConfiguration(initializers = IntegrationTestBase.Initializer.class)
 public abstract class IntegrationTestBase {
 
-    @Autowired
-    protected AdminClient kafkaAdminClient;
-
-    @SpyBean
-    protected KafkaOffsetService kafkaOffsetService;
-
     public static final EmbeddedKafkaRule kafka = new EmbeddedKafkaRule(1, true, 10,
-            TEST_TOPIC, OPERATION_LOG_TOPIC);
+            TEST_TOPIC, OPERATION_LOG_TOPIC
+    );
+    @ClassRule
+    public static TemporaryFolder folder = new TemporaryFolder();
 
     static {
         kafka.before();
     }
 
-    @ClassRule
-    public static TemporaryFolder folder = new TemporaryFolder();
+    @Autowired
+    protected AdminClient kafkaAdminClient;
+    @SpyBean
+    protected KafkaOffsetService kafkaOffsetService;
 
-    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        @SneakyThrows
-        @Override
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues
-                    .of("kafka.bootstrap-servers=" + kafka.getEmbeddedKafka().getBrokersAsString(),
-                            "rocksdb.name=test",
-                            "rocksdb.dir=" + folder.newFolder())
-                    .applyTo(configurableApplicationContext.getEnvironment());
-        }
-    }
-
-    protected List<TopicPartitionInfo> getTopicPartitions(String topicName) throws InterruptedException, ExecutionException {
+    protected List<TopicPartitionInfo> getTopicPartitions(String topicName)
+            throws InterruptedException, ExecutionException {
         return kafkaAdminClient.describeTopics(List.of(topicName))
                 .values()
                 .get(topicName)
@@ -80,7 +68,8 @@ public abstract class IntegrationTestBase {
                 .partitions();
     }
 
-    protected void setInitialOffsets(int partitionNumber, Long initialOffsets, String topicName) throws InterruptedException, ExecutionException {
+    protected void setInitialOffsets(int partitionNumber, Long initialOffsets, String topicName)
+            throws InterruptedException, ExecutionException {
         List<TopicPartitionInfo> partitions = getTopicPartitions(topicName);
 
         kafkaOffsetService.saveOffsets(partitions.stream()
@@ -88,12 +77,14 @@ public abstract class IntegrationTestBase {
                 .map(topicPartitionInfo -> TestData.kafkaOffset(
                         topicName,
                         topicPartitionInfo.partition(),
-                        initialOffsets))
+                        initialOffsets
+                ))
                 .collect(Collectors.toList()));
 
     }
 
-    protected void checkOffsets(int partitionNumber, Long expectedOffset, String topicName) throws ExecutionException, InterruptedException {
+    protected void checkOffsets(int partitionNumber, Long expectedOffset, String topicName)
+            throws ExecutionException, InterruptedException {
         List<TopicPartitionInfo> partitions = getTopicPartitions(topicName);
 
         List<KafkaOffset> kafkaOffsets = kafkaOffsetService.loadOffsets(partitions.stream()
@@ -102,10 +93,16 @@ public abstract class IntegrationTestBase {
                 .collect(Collectors.toList())
         );
 
-        Assert.assertTrue(kafkaOffsets.toString(), kafkaOffsets.stream().anyMatch(kafkaOffset -> kafkaOffset.getOffset().equals(expectedOffset)));
+        Assert.assertTrue(
+                kafkaOffsets.toString(),
+                kafkaOffsets.stream().anyMatch(kafkaOffset -> kafkaOffset.getOffset().equals(expectedOffset))
+        );
     }
 
-    protected <K, T> void registerReceivedMessages(int partitionNumber, AtomicInteger receivedRecordsSize, Handler<K, T> handler) {
+    protected <K, T> void registerReceivedMessages(
+            int partitionNumber,
+            AtomicInteger receivedRecordsSize,
+            Handler<K, T> handler) {
         Mockito.doAnswer(invocation -> {
             // As we can't clean records from topics in test - we just parallelize tests by partitions
             ConsumerRecords<K, T> consumerRecords = (ConsumerRecords<K, T>) invocation.getArguments()[0];
@@ -121,6 +118,19 @@ public abstract class IntegrationTestBase {
                 .handle(any());
     }
 
+    public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+        @SneakyThrows
+        @Override
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            TestPropertyValues
+                    .of(
+                            "kafka.bootstrap-servers=" + kafka.getEmbeddedKafka().getBrokersAsString(),
+                            "rocksdb.name=test",
+                            "rocksdb.dir=" + folder.newFolder()
+                    )
+                    .applyTo(configurableApplicationContext.getEnvironment());
+        }
+    }
 
 
 }

@@ -11,7 +11,7 @@ import java.io.IOException;
 import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
-@NoArgsConstructor(access  = PRIVATE)
+@NoArgsConstructor(access = PRIVATE)
 public class CommonConverter {
 
     private static ObjectMapper objectMapper = new ObjectMapper();

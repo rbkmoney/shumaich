@@ -12,8 +12,14 @@ public class PostingDamselToPostingConverter {
                 .amount(postingDamsel.getAmount())
                 .currencySymbolicCode(postingDamsel.getCurrencySymbolicCode())
                 .description(postingDamsel.getDescription())
-                .fromAccount(new Account(postingDamsel.getFromAccount().getId(), postingDamsel.getFromAccount().getCurrencySymbolicCode()))
-                .toAccount(new Account(postingDamsel.getToAccount().getId(), postingDamsel.getToAccount().getCurrencySymbolicCode()))
+                .fromAccount(new Account(
+                        postingDamsel.getFromAccount().getId(),
+                        postingDamsel.getFromAccount().getCurrencySymbolicCode()
+                ))
+                .toAccount(new Account(
+                        postingDamsel.getToAccount().getId(),
+                        postingDamsel.getToAccount().getCurrencySymbolicCode()
+                ))
                 .build();
     }
 

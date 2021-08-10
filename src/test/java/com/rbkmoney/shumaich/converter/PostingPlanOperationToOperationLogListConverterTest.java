@@ -1,7 +1,7 @@
 package com.rbkmoney.shumaich.converter;
 
-import com.rbkmoney.damsel.shumaich.OperationLog;
 import com.rbkmoney.damsel.shumaich.Account;
+import com.rbkmoney.damsel.shumaich.OperationLog;
 import com.rbkmoney.shumaich.domain.PostingPlanOperation;
 import com.rbkmoney.shumaich.helpers.TestData;
 import org.junit.Test;
@@ -47,12 +47,17 @@ public class PostingPlanOperationToOperationLogListConverterTest {
                 .flatMap(postingBatch -> postingBatch.getPostings().stream())
                 .forEach(posting -> {
                     if (postingPlanMoneyMap.containsKey(posting.getToAccount())) {
-                        postingPlanMoneyMap.put(posting.getToAccount(),
-                                postingPlanMoneyMap.get(posting.getToAccount()) + posting.getAmount());
+                        postingPlanMoneyMap.put(
+                                posting.getToAccount(),
+                                postingPlanMoneyMap.get(posting.getToAccount()) + posting.getAmount()
+                        );
                     }
                     if (postingPlanMoneyMap.containsKey(posting.getFromAccount())) {
-                        postingPlanMoneyMap.put(posting.getFromAccount(),
-                                postingPlanMoneyMap.get(posting.getFromAccount()) + Math.negateExact(posting.getAmount()));
+                        postingPlanMoneyMap.put(
+                                posting.getFromAccount(),
+                                postingPlanMoneyMap.get(posting.getFromAccount()) +
+                                Math.negateExact(posting.getAmount())
+                        );
                     }
                     postingPlanMoneyMap.putIfAbsent(posting.getToAccount(), posting.getAmount());
                     postingPlanMoneyMap.putIfAbsent(posting.getFromAccount(), Math.negateExact(posting.getAmount()));
@@ -62,10 +67,12 @@ public class PostingPlanOperationToOperationLogListConverterTest {
                 .collect(Collectors.groupingBy(OperationLog::getAccount))
                 .entrySet()
                 .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey,
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
                         operationLogEntry -> operationLogEntry.getValue().stream()
                                 .mapToLong(OperationLog::getAmountWithSign)
-                                .reduce(0, Long::sum)));
+                                .reduce(0, Long::sum)
+                ));
 
         assertEquals(postingPlanMoneyMap, operationLogMoneyMap);
     }

@@ -54,7 +54,7 @@ public class MdcUtils {
     private static String extractAccounts(PostingPlan postingPlan) {
         return postingPlan.getBatchList().stream()
                 .flatMap(batch -> batch.getPostings().stream())
-                .flatMap(posting ->  Stream.of(posting.getFromAccount().getId(), posting.getToAccount().getId()))
+                .flatMap(posting -> Stream.of(posting.getFromAccount().getId(), posting.getToAccount().getId()))
                 .distinct()
                 .map(Object::toString)
                 .collect(Collectors.joining(","));

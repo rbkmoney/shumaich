@@ -26,7 +26,7 @@ public abstract class RocksdbTestBase {
         @Override
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
             TestPropertyValues
-                    .of("rocksdb.name=test" ,
+                    .of("rocksdb.name=test",
                             "rocksdb.dir=" + folder.newFolder())
                     .applyTo(configurableApplicationContext.getEnvironment());
         }

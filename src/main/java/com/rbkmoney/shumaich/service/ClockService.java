@@ -44,7 +44,8 @@ public class ClockService {
                 .stream()
                 .map(partitionOffsetPair -> new KafkaOffset(
                         new TopicPartition(deserializedClock.getTopicName(), partitionOffsetPair.getPartition()),
-                        partitionOffsetPair.getOffset()))
+                        partitionOffsetPair.getOffset()
+                ))
                 .collect(Collectors.toList());
     }
 
@@ -67,13 +68,13 @@ public class ClockService {
 
     public void softCheckClockTimeline(com.rbkmoney.damsel.shumaich.Clock clock) {
         if (clock == null || clock.isSetLatest()) {
-                return;
+            return;
         }
 
         List<KafkaOffset> kafkaOffsets = parseClock(VectorClockSerde.deserialize(clock.getVector()));
 
         if (kafkaOffsets.isEmpty()) {
-                return;
+            return;
         }
 
         if (!kafkaOffsetService.isBeforeCurrentOffsets(kafkaOffsets)) {

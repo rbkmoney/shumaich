@@ -20,9 +20,10 @@ public class TestData {
     public static final Long MERCHANT_ACC = 3000000000L;
     public static final String PLAN_ID = "plan";
 
-    private static final PostingBatchDamselToPostingBatchConverter CONVERTER = new PostingBatchDamselToPostingBatchConverter(
-            new PostingDamselToPostingConverter()
-    );
+    private static final PostingBatchDamselToPostingBatchConverter CONVERTER =
+            new PostingBatchDamselToPostingBatchConverter(
+                    new PostingDamselToPostingConverter()
+            );
 
     public static PostingPlanOperation postingPlanOperation(String planId) {
         return PostingPlanOperation.builder()

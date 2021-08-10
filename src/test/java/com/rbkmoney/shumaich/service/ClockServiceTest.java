@@ -2,7 +2,6 @@ package com.rbkmoney.shumaich.service;
 
 import com.rbkmoney.damsel.shumaich.Clock;
 import com.rbkmoney.damsel.shumaich.LatestClock;
-import com.rbkmoney.shumaich.dao.KafkaOffsetDao;
 import com.rbkmoney.shumaich.domain.KafkaOffset;
 import com.rbkmoney.shumaich.exception.NotReadyException;
 import com.rbkmoney.shumaich.helpers.TestUtils;
@@ -27,7 +26,8 @@ public class ClockServiceTest {
 
     @Test
     public void successPath() {
-        List<RecordMetadata> recordMetadata = List.of(getRecordMetadata(1, 10),
+        List<RecordMetadata> recordMetadata = List.of(
+                getRecordMetadata(1, 10),
                 getRecordMetadata(2, 7),
                 getRecordMetadata(3, 25)
         );
@@ -97,7 +97,7 @@ public class ClockServiceTest {
     private Clock getFilledClock() {
         return Clock.vector(VectorClockSerde.serialize(TestUtils.createSerializedClock()));
     }
-    
+
     private Clock getEmptyClock() {
         return Clock.vector(VectorClockSerde.serialize(""));
     }

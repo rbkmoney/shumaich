@@ -156,9 +156,9 @@ public class SimpleTopicConsumerIntegrationTest extends IntegrationTestBase {
     @Configuration
     public static class Config {
 
+        private static final String EARLIEST = "earliest";
         @Value("${kafka.topics.partitions-per-thread}")
         private Integer partitionsPerThread;
-
         @Value("${kafka.topics.polling-timeout}")
         private Long pollingTimeout;
 
@@ -167,8 +167,6 @@ public class SimpleTopicConsumerIntegrationTest extends IntegrationTestBase {
         Handler<String, String> testLogHandler() {
             return mock(Handler.class);
         }
-
-        private static final String EARLIEST = "earliest";
 
         @Bean
         @DependsOn(value = "rocksDB")
@@ -184,9 +182,10 @@ public class SimpleTopicConsumerIntegrationTest extends IntegrationTestBase {
 
         @Bean
         @DependsOn(value = "rocksDB")
-        public TopicConsumptionManager<String, String> testLogTopicConsumptionManager(AdminClient kafkaAdminClient,
-                                                                                      KafkaOffsetService kafkaOffsetService,
-                                                                                      Handler<String, String> handler) throws ExecutionException, InterruptedException {
+        public TopicConsumptionManager<String, String> testLogTopicConsumptionManager(
+                AdminClient kafkaAdminClient,
+                KafkaOffsetService kafkaOffsetService,
+                Handler<String, String> handler) throws ExecutionException, InterruptedException {
             Map<String, Object> consumerProps = new HashMap<>();
             consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getEmbeddedKafka().getBrokersAsString());
             consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, EARLIEST);
@@ -200,7 +199,8 @@ public class SimpleTopicConsumerIntegrationTest extends IntegrationTestBase {
                     .get(TEST_TOPIC)
                     .get();
 
-            return new TopicConsumptionManager<>(topicDescription,
+            return new TopicConsumptionManager<>(
+                    topicDescription,
                     partitionsPerThread,
                     consumerProps,
                     kafkaOffsetService,

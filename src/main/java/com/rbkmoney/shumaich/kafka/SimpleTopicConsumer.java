@@ -21,14 +21,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SimpleTopicConsumer<K, V> implements Runnable {
 
-    private volatile boolean alive = true;
-    private KafkaConsumer<K, V> consumer;
-
     private final Map<String, Object> consumerProps;
     private final List<TopicPartition> assignedPartitions;
     private final KafkaOffsetService kafkaOffsetService;
     private final Handler<K, V> handler;
     private final Long pollingTimeout;
+    private volatile boolean alive = true;
+    private KafkaConsumer<K, V> consumer;
 
     public static <K, V> SimpleTopicConsumer<K, V> of(SimpleTopicConsumer<K, V> otherConsumer) {
         return new SimpleTopicConsumer<>(

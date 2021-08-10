@@ -43,7 +43,7 @@ public class KafkaOffsetService {
 
     public void saveOffsets(List<KafkaOffset> kafkaOffsets) {
         try (WriteBatch writeBatch = new WriteBatch();
-             WriteOptions writeOptions = new WriteOptions().setSync(true)) {
+                WriteOptions writeOptions = new WriteOptions().setSync(true)) {
             prepareBatch(kafkaOffsets, writeBatch);
             kafkaOffsetDao.putBatch(writeOptions, writeBatch);
         } catch (RocksDBException e) {
@@ -55,7 +55,8 @@ public class KafkaOffsetService {
     private void prepareBatch(List<KafkaOffset> kafkaOffsets, WriteBatch writeBatch) throws RocksDBException {
         for (Map.Entry<String, Long> entry : convertToMap(kafkaOffsets).entrySet()) {
             writeBatch.put(kafkaOffsetDao.getColumnFamilyHandle(), entry.getKey().getBytes(),
-                    CommonConverter.toBytes(entry.getValue()));
+                    CommonConverter.toBytes(entry.getValue())
+            );
         }
     }
 
@@ -75,8 +76,9 @@ public class KafkaOffsetService {
     private Predicate<KafkaOffset> isBefore(Map<Integer, Long> currentOffsetsLookupMap) {
         return clockKafkaOffset -> {
             Long currentOffset = currentOffsetsLookupMap.get(clockKafkaOffset.getTopicPartition().partition());
-            if (currentOffset == null)
+            if (currentOffset == null) {
                 return false;
+            }
             return currentOffset > clockKafkaOffset.getOffset();
         };
     }

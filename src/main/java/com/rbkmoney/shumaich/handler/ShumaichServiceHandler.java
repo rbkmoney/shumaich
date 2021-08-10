@@ -34,9 +34,9 @@ public class ShumaichServiceHandler implements AccounterSrv.Iface {
         } catch (NotReadyException e) {
             log.info(HOLD_IS_NOT_READ_YET, e);
             throw new NotReady();
-        } catch (CurrencyInPostingsNotConsistentException
-                | AccountsInPostingsAreEqualException
-                | AccountsHaveDifferentCurrenciesException e) {
+        } catch (CurrencyInPostingsNotConsistentException |
+                AccountsInPostingsAreEqualException |
+                AccountsHaveDifferentCurrenciesException e) {
             log.warn(POSTINGS_ARE_INVALID, e);
             throw new InvalidPostingParams();
         } catch (Exception e) {
@@ -57,10 +57,10 @@ public class ShumaichServiceHandler implements AccounterSrv.Iface {
         } catch (NotReadyException e) {
             log.info(HOLD_IS_NOT_READ_YET, e);
             throw new NotReady();
-        } catch (CurrencyInPostingsNotConsistentException
-                | AccountsInPostingsAreEqualException
-                | AccountsHaveDifferentCurrenciesException
-                | HoldChecksumMismatchException e) {
+        } catch (CurrencyInPostingsNotConsistentException |
+                AccountsInPostingsAreEqualException |
+                AccountsHaveDifferentCurrenciesException |
+                HoldChecksumMismatchException e) {
             log.warn(POSTINGS_ARE_INVALID, e);
             throw new InvalidPostingParams();
         } catch (Exception e) {
@@ -82,10 +82,10 @@ public class ShumaichServiceHandler implements AccounterSrv.Iface {
         } catch (NotReadyException e) {
             log.info(HOLD_IS_NOT_READ_YET, e);
             throw new NotReady();
-        } catch (CurrencyInPostingsNotConsistentException
-                | AccountsInPostingsAreEqualException
-                | AccountsHaveDifferentCurrenciesException
-                | HoldChecksumMismatchException e) {
+        } catch (CurrencyInPostingsNotConsistentException |
+                AccountsInPostingsAreEqualException |
+                AccountsHaveDifferentCurrenciesException |
+                HoldChecksumMismatchException e) {
             log.warn(POSTINGS_ARE_INVALID, e);
             throw new InvalidPostingParams();
         } catch (Exception e) {

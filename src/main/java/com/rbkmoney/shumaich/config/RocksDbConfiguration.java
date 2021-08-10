@@ -18,21 +18,27 @@ import java.util.stream.Collectors;
 public class RocksDbConfiguration {
 
     @Bean(destroyMethod = "closeE")
-    TransactionDB rocksDB(@Value("${rocksdb.name}") String name,
-                          @Value("${rocksdb.dir}") String dbDir,
-                          List<RocksDbDao> daoList,
-                          DBOptions dbOptions,
-                          TransactionDBOptions transactionDbOptions) throws RocksDBException {
+    TransactionDB rocksDB(
+            @Value("${rocksdb.name}") String name,
+            @Value("${rocksdb.dir}") String dbDir,
+            List<RocksDbDao> daoList,
+            DBOptions dbOptions,
+            TransactionDBOptions transactionDbOptions) throws RocksDBException {
         try {
             File dbFile = new File(dbDir, name);
             ArrayList<ColumnFamilyHandle> columnFamilyHandles = new ArrayList<>();
             TransactionDB transactionDB = TransactionDB.open(dbOptions, transactionDbOptions, dbFile.getAbsolutePath(),
-                    getColumnFamilyDescriptors(daoList), columnFamilyHandles);
+                    getColumnFamilyDescriptors(daoList), columnFamilyHandles
+            );
             initDaos(columnFamilyHandles, daoList, transactionDB);
             return transactionDB;
         } catch (RocksDBException ex) {
-            log.error("Error initializing RocksDB, check configurations and permissions, exception: {}, message: {}, stackTrace: {}",
-                    ex.getCause(), ex.getMessage(), ex.getStackTrace());
+            log.error("Error initializing RocksDB, check configurations and permissions, exception: {}, message: {}, " +
+                      "stackTrace: {}",
+                    ex.getCause(),
+                    ex.getMessage(),
+                    ex.getStackTrace()
+            );
             throw ex;
         }
     }
@@ -60,7 +66,8 @@ public class RocksDbConfiguration {
         return descriptors;
     }
 
-    private void initDaos(List<ColumnFamilyHandle> columnFamilyHandles, List<RocksDbDao> daoList, TransactionDB rocksDb) throws RocksDBException {
+    private void initDaos(List<ColumnFamilyHandle> columnFamilyHandles, List<RocksDbDao> daoList, TransactionDB rocksDb)
+            throws RocksDBException {
         for (ColumnFamilyHandle columnFamilyHandle : columnFamilyHandles) {
             for (RocksDbDao rocksDbDao : daoList) {
                 if (Arrays.equals(columnFamilyHandle.getDescriptor().getName(), rocksDbDao.getColumnFamilyName())) {

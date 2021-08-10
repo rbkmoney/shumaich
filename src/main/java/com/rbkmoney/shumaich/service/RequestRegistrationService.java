@@ -34,7 +34,7 @@ public class RequestRegistrationService {
         validationService.validatePostings(postingPlan);
         PostingPlanOperation postingPlanOperation = finalOpConverter.convert(postingPlan, operationType);
         ValidationError validationError = validationService.validateFinalOp(postingPlanOperation);
-        if (validationError != null)  {
+        if (validationError != null) {
             log.info("Hold does not exist, maybe it is already cleared");
             postingPlanOperation.setValidationError(validationError);
         }

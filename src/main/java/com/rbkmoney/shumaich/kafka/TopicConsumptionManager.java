@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +30,13 @@ public class TopicConsumptionManager<K, V> {
     private final AtomicBoolean destroying = new AtomicBoolean(false);
     private volatile boolean initialized = false;
 
-    public TopicConsumptionManager(TopicDescription topicDescription,
-                                   Integer partitionsPerThread,
-                                   Map<String, Object> consumerProps,
-                                   KafkaOffsetService kafkaOffsetService,
-                                   Handler<K, V> handler,
-                                   Long pollingTimeout) {
+    public TopicConsumptionManager(
+            TopicDescription topicDescription,
+            Integer partitionsPerThread,
+            Map<String, Object> consumerProps,
+            KafkaOffsetService kafkaOffsetService,
+            Handler<K, V> handler,
+            Long pollingTimeout) {
         List<TopicPartitionInfo> topicPartitions = topicDescription.partitions();
         int consumersAmount = (int) Math.ceil(topicPartitions.size() / (double) partitionsPerThread);
         this.executorService = Executors.newFixedThreadPool(consumersAmount);
@@ -61,8 +63,9 @@ public class TopicConsumptionManager<K, V> {
 
     @Scheduled(fixedRateString = "${kafka.topics.consumer-monitor-rate}")
     public void monitorConsumers() {
-        if (!initialized || destroying.get())
+        if (!initialized || destroying.get()) {
             return;
+        }
 
         List<SimpleTopicConsumer<K, V>> deadConsumers = consumers.stream()
                 .filter(Predicate.not(SimpleTopicConsumer::isAlive))
@@ -70,7 +73,8 @@ public class TopicConsumptionManager<K, V> {
 
         log.info("Consumers state, total:{}, alive:{}, dead:{}", consumers.size(),
                 consumers.size() - deadConsumers.size(),
-                deadConsumers.size());
+                deadConsumers.size()
+        );
 
         consumers.removeAll(deadConsumers);
         consumers.addAll(restartDeadConsumers(deadConsumers));
@@ -95,9 +99,10 @@ public class TopicConsumptionManager<K, V> {
                 .collect(Collectors.toList());
     }
 
-    private List<TopicPartition> calculateAssignedPartitions(Integer partitionsPerThread,
-                                                             TopicDescription topicDescription,
-                                                             int i) {
+    private List<TopicPartition> calculateAssignedPartitions(
+            Integer partitionsPerThread,
+            TopicDescription topicDescription,
+            int i) {
         int fromIndex = i * partitionsPerThread;
         int toIndex = fromIndex + partitionsPerThread > topicDescription.partitions().size()
                 ? fromIndex + (topicDescription.partitions().size() % partitionsPerThread)
@@ -107,7 +112,8 @@ public class TopicConsumptionManager<K, V> {
                 .stream()
                 .map(partitionInfo -> new TopicPartition(
                         topicDescription.name(),
-                        partitionInfo.partition()))
+                        partitionInfo.partition()
+                ))
                 .collect(Collectors.toList());
     }
 

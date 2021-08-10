@@ -25,7 +25,11 @@ public class BalanceDao extends RocksDbDao {
 
     public void put(Balance balance) {
         try {
-            rocksDB.put(columnFamilyHandle, Longs.toByteArray(balance.getAccountId()), CommonConverter.toBytes(balance));
+            rocksDB.put(
+                    columnFamilyHandle,
+                    Longs.toByteArray(balance.getAccountId()),
+                    CommonConverter.toBytes(balance)
+            );
         } catch (RocksDBException e) {
             log.error("Can't create balance with ID: {}", balance.getAccountId(), e);
             throw new DaoException("Can't create balance with ID: " + balance.getAccountId(), e);
@@ -34,7 +38,10 @@ public class BalanceDao extends RocksDbDao {
 
     public Balance get(Long accountId) {
         try {
-            return CommonConverter.fromBytes(rocksDB.get(columnFamilyHandle, Longs.toByteArray(accountId)), Balance.class);
+            return CommonConverter.fromBytes(
+                    rocksDB.get(columnFamilyHandle, Longs.toByteArray(accountId)),
+                    Balance.class
+            );
         } catch (RocksDBException e) {
             log.error("Can't get balance with ID: {}", accountId, e);
             throw new DaoException("Can't get balance with ID: " + accountId, e);
@@ -53,7 +60,11 @@ public class BalanceDao extends RocksDbDao {
 
     public void putInTransaction(Transaction transaction, Balance balance) {
         try {
-            transaction.put(columnFamilyHandle, Longs.toByteArray(balance.getAccountId()), CommonConverter.toBytes(balance));
+            transaction.put(
+                    columnFamilyHandle,
+                    Longs.toByteArray(balance.getAccountId()),
+                    CommonConverter.toBytes(balance)
+            );
         } catch (RocksDBException e) {
             log.error("Can't update balance with ID: {}", balance.getAccountId(), e);
             throw new DaoException("Can't update balance with ID: " + balance.getAccountId(), e);

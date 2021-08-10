@@ -22,7 +22,8 @@ public class HoldPlansExecutor implements Callable<Map.Entry<String, Balance>> {
     @Override
     public Map.Entry<String, Balance> call() throws Exception {
         Clock holdClock = retryTemplate.execute(context -> serviceHandler.hold(postingPlanChange, null));
-        Balance balanceByID = retryTemplate.execute(context -> serviceHandler.getBalanceByID(accountToCheck, holdClock));
+        Balance balanceByID =
+                retryTemplate.execute(context -> serviceHandler.getBalanceByID(accountToCheck, holdClock));
         return Map.entry(VectorClockSerde.deserialize(balanceByID.getClock().getVector()), balanceByID);
     }
 }

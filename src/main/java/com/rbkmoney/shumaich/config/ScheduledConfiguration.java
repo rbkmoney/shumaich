@@ -14,10 +14,10 @@ public class ScheduledConfiguration {
     public Integer schedulerPoolSize;
 
     @Bean
-    public ThreadPoolTaskScheduler taskScheduler(){
+    public ThreadPoolTaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(schedulerPoolSize);
-        return  taskScheduler;
+        return taskScheduler;
     }
 
 }

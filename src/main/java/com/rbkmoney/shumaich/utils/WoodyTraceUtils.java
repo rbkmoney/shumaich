@@ -11,31 +11,36 @@ public class WoodyTraceUtils {
 
     public static String getSpanId() {
         Span span = getActiveSpan();
-        if (span == null)
+        if (span == null) {
             return null;
+        }
         return span.getId();
     }
 
     public static String getTraceId() {
         Span span = getActiveSpan();
-        if (span == null)
+        if (span == null) {
             return null;
+        }
         return span.getTraceId();
     }
 
     public static String getParentId() {
         Span span = getActiveSpan();
-        if (span == null)
+        if (span == null) {
             return null;
+        }
         return span.getParentId();
     }
 
     public static Span getActiveSpan() {
         final TraceData currentTraceData = TraceContext.getCurrentTraceData();
-        if (currentTraceData == null)
+        if (currentTraceData == null) {
             return null;
-        if (currentTraceData.getActiveSpan() == null)
+        }
+        if (currentTraceData.getActiveSpan() == null) {
             return null;
+        }
         return currentTraceData.getActiveSpan().getSpan();
     }
 }

@@ -4,7 +4,6 @@ import com.rbkmoney.shumaich.RocksdbTestBase;
 import com.rbkmoney.shumaich.dao.KafkaOffsetDao;
 import com.rbkmoney.shumaich.domain.KafkaOffset;
 import com.rbkmoney.shumaich.helpers.TestData;
-import com.rbkmoney.shumaich.service.KafkaOffsetService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +27,7 @@ public class KafkaOffsetServiceTest extends RocksdbTestBase {
                 TestData.kafkaOffset(TestData.TEST_TOPIC, 1, 1L),
                 TestData.kafkaOffset(TestData.TEST_TOPIC, 2, 1L),
                 TestData.kafkaOffset(TestData.TEST_TOPIC, 3, 1L)
-                ));
+        ));
 
         List<KafkaOffset> kafkaOffsets = kafkaOffsetService.loadOffsets(List.of(
                 TestData.topicPartition(1),

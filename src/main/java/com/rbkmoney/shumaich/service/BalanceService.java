@@ -111,6 +111,8 @@ public class BalanceService {
                     balance.setMinAmount(balance.getMinAmount() - amount);
                 }
                 break;
+            default:
+                throw new RuntimeException("It's impossible");
         }
         return balance;
     }
@@ -125,7 +127,8 @@ public class BalanceService {
             throw new AccountNotFoundException();
         }
         return new com.rbkmoney.damsel.shumaich.Balance(accountId,
-                balance.getAmount(), balance.getMaxAmount(), balance.getMinAmount(), null);
+                balance.getAmount(), balance.getMaxAmount(), balance.getMinAmount(), null
+        );
     }
 
     public com.rbkmoney.damsel.shumaich.Account getAccount(Long accountId) {
