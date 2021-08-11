@@ -9,7 +9,7 @@ build('shumaich', 'java-maven') {
     }
 
     def serviceName = env.REPO_NAME
-    def mvnArgs = '-DjvmArgs="-Xmx256m"'
+    def mvnArgs = '-DjvmArgs="-Xmx512m"'
 
     javaServicePipeline(serviceName, mvnArgs)
 }
