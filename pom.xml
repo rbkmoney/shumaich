@@ -21,9 +21,9 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <server.port>8022</server.port>
         <management.port>8023</management.port>
+        <exposed.ports>${server.port} ${management.port}</exposed.ports>
         <!-- image tag needed for custom image -->
         <dockerfile.base.service.tag>1d57d77a38eb7b351eca3c1a9a3e45ec441ed9aa</dockerfile.base.service.tag>
-        <exposed.ports>${server.port} ${management.port}</exposed.ports>
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
     </properties>
 
