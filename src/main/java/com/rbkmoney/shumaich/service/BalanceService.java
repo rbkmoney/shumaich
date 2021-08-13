@@ -54,7 +54,7 @@ public class BalanceService {
         try {
             formTransaction(operationLog, transaction);
             transaction.commit();
-        } catch (RocksDBException e) {
+        } catch (Throwable e) {
             log.error("Error in proceedHold, operationLog: {}", operationLog);
             rollbackTransaction(writeOptions, transaction);
             throw new DaoException("Error in proceedHold, operationLog: " + operationLog, e);

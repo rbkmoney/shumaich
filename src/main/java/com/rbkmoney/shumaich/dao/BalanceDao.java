@@ -7,7 +7,6 @@ import com.rbkmoney.shumaich.exception.DaoException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rocksdb.ReadOptions;
-import org.rocksdb.RocksDBException;
 import org.rocksdb.Transaction;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,7 @@ public class BalanceDao extends RocksDbDao {
                     Longs.toByteArray(balance.getAccountId()),
                     CommonConverter.toBytes(balance)
             );
-        } catch (RocksDBException e) {
+        } catch (Throwable e) {
             log.error("Can't create balance with ID: {}", balance.getAccountId(), e);
             throw new DaoException("Can't create balance with ID: " + balance.getAccountId(), e);
         }
@@ -44,7 +43,7 @@ public class BalanceDao extends RocksDbDao {
                     rocksDB.get(columnFamilyHandle, Longs.toByteArray(accountId)),
                     Balance.class
             );
-        } catch (RocksDBException e) {
+        } catch (Throwable e) {
             log.error("Can't get balance with ID: {}", accountId, e);
             throw new DaoException("Can't get balance with ID: " + accountId, e);
         }
@@ -54,7 +53,7 @@ public class BalanceDao extends RocksDbDao {
         try (ReadOptions readOptions = new ReadOptions()) {
             return CommonConverter.fromBytes(
                     transaction.get(columnFamilyHandle, readOptions, Longs.toByteArray(accountId)), Balance.class);
-        } catch (RocksDBException e) {
+        } catch (Throwable e) {
             log.error("Can't get balance for update with ID: {}", accountId, e);
             throw new DaoException("Can't get balance for update with ID: " + accountId, e);
         }
@@ -67,7 +66,7 @@ public class BalanceDao extends RocksDbDao {
                     Longs.toByteArray(balance.getAccountId()),
                     CommonConverter.toBytes(balance)
             );
-        } catch (RocksDBException e) {
+        } catch (Throwable e) {
             log.error("Can't update balance with ID: {}", balance.getAccountId(), e);
             throw new DaoException("Can't update balance with ID: " + balance.getAccountId(), e);
         }

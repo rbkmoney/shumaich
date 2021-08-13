@@ -7,7 +7,6 @@ import com.rbkmoney.shumaich.exception.DaoException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.rocksdb.ReadOptions;
-import org.rocksdb.RocksDBException;
 import org.rocksdb.Transaction;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,7 @@ public class PlanDao extends RocksDbDao {
     public Plan get(String planId) {
         try {
             return CommonConverter.fromBytes(rocksDB.get(columnFamilyHandle, planId.getBytes()), Plan.class);
-        } catch (RocksDBException e) {
+        } catch (Throwable e) {
             log.error("Can't get plan with id: {}", planId, e);
             throw new DaoException("Can't get plan with id: " + planId, e);
         }
@@ -40,7 +39,7 @@ public class PlanDao extends RocksDbDao {
                     transaction.getForUpdate(readOptions, columnFamilyHandle, planId.getBytes(), true),
                     Plan.class
             );
-        } catch (RocksDBException e) {
+        } catch (Throwable e) {
             log.error("Can't get plan for update with id: {}", planId, e);
             throw new DaoException("Can't get plan for update with id: " + planId, e);
         }
@@ -49,7 +48,7 @@ public class PlanDao extends RocksDbDao {
     public void putInTransaction(Transaction transaction, String planId, Plan plan) {
         try {
             transaction.put(columnFamilyHandle, planId.getBytes(), CommonConverter.toBytes(plan));
-        } catch (RocksDBException e) {
+        } catch (Throwable e) {
             log.error("Can't save plan with id: {}", planId, e);
             throw new DaoException("Can't save plan with id: " + planId, e);
         }
@@ -58,7 +57,7 @@ public class PlanDao extends RocksDbDao {
     public void delete(String planId) {
         try {
             rocksDB.delete(columnFamilyHandle, planId.getBytes());
-        } catch (RocksDBException e) {
+        } catch (Throwable e) {
             log.error("Can't delete plan with id: {}", planId, e);
             throw new DaoException("Can't delete plan with id: " + planId, e);
         }

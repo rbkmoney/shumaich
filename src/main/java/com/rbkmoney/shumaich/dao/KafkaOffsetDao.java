@@ -26,7 +26,7 @@ public class KafkaOffsetDao extends RocksDbDao {
     public Long get(String topicPartition) {
         try {
             return CommonConverter.fromBytes(rocksDB.get(columnFamilyHandle, topicPartition.getBytes()), Long.class);
-        } catch (RocksDBException e) {
+        } catch (Throwable e) {
             log.error("Can't get kafkaOffset topicPartition with ID: {}", topicPartition, e);
             throw new DaoException("Can't get kafkaOffset topicPartition with ID: " + topicPartition, e);
         }
