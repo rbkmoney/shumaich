@@ -11,6 +11,8 @@ import org.rocksdb.RocksDBException;
 import org.rocksdb.Transaction;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -60,5 +62,11 @@ public class PlanDao extends RocksDbDao {
             log.error("Can't delete plan with id: {}", planId, e);
             throw new DaoException("Can't delete plan with id: " + planId, e);
         }
+    }
+
+    @PreDestroy
+    @Override
+    public void closeHandle() {
+        super.closeHandle();
     }
 }

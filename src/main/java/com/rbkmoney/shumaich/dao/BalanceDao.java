@@ -11,6 +11,8 @@ import org.rocksdb.RocksDBException;
 import org.rocksdb.Transaction;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -69,5 +71,11 @@ public class BalanceDao extends RocksDbDao {
             log.error("Can't update balance with ID: {}", balance.getAccountId(), e);
             throw new DaoException("Can't update balance with ID: " + balance.getAccountId(), e);
         }
+    }
+
+    @PreDestroy
+    @Override
+    public void closeHandle() {
+        super.closeHandle();
     }
 }

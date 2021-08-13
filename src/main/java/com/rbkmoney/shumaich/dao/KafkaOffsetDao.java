@@ -9,6 +9,8 @@ import org.rocksdb.WriteBatch;
 import org.rocksdb.WriteOptions;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -32,5 +34,11 @@ public class KafkaOffsetDao extends RocksDbDao {
 
     public void putBatch(WriteOptions writeOptions, WriteBatch writeBatch) throws RocksDBException {
         rocksDB.write(writeOptions, writeBatch);
+    }
+
+    @PreDestroy
+    @Override
+    public void closeHandle() {
+        super.closeHandle();
     }
 }

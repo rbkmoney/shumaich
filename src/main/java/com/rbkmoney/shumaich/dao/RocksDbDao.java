@@ -19,4 +19,8 @@ public abstract class RocksDbDao {
     public ColumnFamilyHandle getColumnFamilyHandle() {
         return columnFamilyHandle;
     }
+
+    protected void closeHandle() {
+        this.columnFamilyHandle.close();
+    }
 }
