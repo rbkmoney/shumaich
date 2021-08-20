@@ -20,7 +20,7 @@ public abstract class RocksDbDao {
         return columnFamilyHandle;
     }
 
-    protected void closeHandle() {
+    public void closeHandle() {
         this.columnFamilyHandle.close();
     }
 }
