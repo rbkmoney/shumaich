@@ -50,7 +50,7 @@ public class SimpleTopicConsumer<K, V> implements Runnable {
 
             while (isAlive()) {
                 ConsumerRecords<K, V> records = consumer.poll(Duration.ofMillis(pollingTimeout));
-                if (records.count() > 0) {
+                if (records.count() > 0 && isAlive()) {
                     handler.handle(records);
                     saveOffsetsAndSeek(records);
                 }
