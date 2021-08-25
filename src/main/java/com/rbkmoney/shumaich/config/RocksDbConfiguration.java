@@ -30,9 +30,7 @@ public class RocksDbConfiguration {
             TransactionDB transactionDB = TransactionDB.open(dbOptions, transactionDbOptions, dbFile.getAbsolutePath(),
                     getColumnFamilyDescriptors(daoList), columnFamilyHandles
             );
-            Thread.sleep(5000L); //todo fix this delay
             initDaos(columnFamilyHandles, daoList, transactionDB);
-            Thread.sleep(5000L); //todo fix this delay
             return transactionDB;
         } catch (RocksDBException ex) {
             log.error("Error initializing RocksDB, check configurations and permissions, exception: {}, message: {}, " +
@@ -42,9 +40,6 @@ public class RocksDbConfiguration {
                     ex.getStackTrace()
             );
             throw ex;
-        } catch (InterruptedException e) {
-            log.error("OMGOD", e);
-            throw new RuntimeException();
         }
     }
 
@@ -54,6 +49,11 @@ public class RocksDbConfiguration {
         options.setCreateIfMissing(true);
         options.setCreateMissingColumnFamilies(true);
         options.setInfoLogLevel(InfoLogLevel.DEBUG_LEVEL);
+        options.setIncreaseParallelism(100);
+        options.setMaxOpenFiles(100);
+        options.setAllowConcurrentMemtableWrite(false);
+        options.setMaxTotalWalSize(100000);
+        options.setUseFsync(true);
         return options;
     }
 
