@@ -4,6 +4,7 @@ import com.rbkmoney.shumaich.domain.KafkaOffset;
 import com.rbkmoney.shumaich.kafka.handler.Handler;
 import com.rbkmoney.shumaich.service.KafkaOffsetService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -43,8 +44,10 @@ public class SimpleTopicConsumer<K, V> implements Runnable {
         return alive && !Thread.currentThread().isInterrupted();
     }
 
+    @SneakyThrows
     @Override
     public void run() {
+        Thread.sleep(5000L); //todo fix this delay
         try {
             initConsumer();
 
