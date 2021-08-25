@@ -84,7 +84,7 @@ public class TopicConsumptionManager<K, V> {
     public void shutdownConsumersGracefully() throws InterruptedException {
         if (destroying.compareAndSet(false, true)) {
             log.info("Consumers shutting down...");
-            executorService.shutdownNow();
+            executorService.shutdown();
             if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
                 log.warn("Executor service awaitTermination timeout");
             }
