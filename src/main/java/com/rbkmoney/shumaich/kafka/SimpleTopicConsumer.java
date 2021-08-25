@@ -47,7 +47,6 @@ public class SimpleTopicConsumer<K, V> implements Runnable {
     @SneakyThrows
     @Override
     public void run() {
-        Thread.sleep(5000L); //todo fix this delay
         try {
             initConsumer();
 

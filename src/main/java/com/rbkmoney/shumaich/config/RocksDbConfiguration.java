@@ -30,7 +30,9 @@ public class RocksDbConfiguration {
             TransactionDB transactionDB = TransactionDB.open(dbOptions, transactionDbOptions, dbFile.getAbsolutePath(),
                     getColumnFamilyDescriptors(daoList), columnFamilyHandles
             );
+            Thread.sleep(5000L); //todo fix this delay
             initDaos(columnFamilyHandles, daoList, transactionDB);
+            Thread.sleep(5000L); //todo fix this delay
             return transactionDB;
         } catch (RocksDBException ex) {
             log.error("Error initializing RocksDB, check configurations and permissions, exception: {}, message: {}, " +
@@ -40,6 +42,9 @@ public class RocksDbConfiguration {
                     ex.getStackTrace()
             );
             throw ex;
+        } catch (InterruptedException e) {
+            log.error("OMGOD", e);
+            throw new RuntimeException();
         }
     }
 
