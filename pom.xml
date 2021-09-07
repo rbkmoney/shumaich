@@ -23,6 +23,7 @@
         <management.port>8023</management.port>
         <!-- image tag needed for custom image -->
         <dockerfile.base.service.tag>1d57d77a38eb7b351eca3c1a9a3e45ec441ed9aa</dockerfile.base.service.tag>
+        <dockerfile.build.tag>bdc05544014b3475c8e0726d3b3d6fc81b09db96</dockerfile.build.tag>
         <exposed.ports>${server.port} ${management.port}</exposed.ports>
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
     </properties>
